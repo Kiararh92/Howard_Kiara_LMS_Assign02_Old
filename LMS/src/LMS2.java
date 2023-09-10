@@ -6,49 +6,81 @@ import java.util.*;
 
 
 public class LMS2 {
-
+    /*
+     * Kiara Howard, Software Dev I, 9/10/23
+     * Class Name Library
+     * This class adds and removes books to two different ArrayList that was
+     * created to host all available and borrowed books.
+     */
     public static class Library {
-        private ArrayList <LMS2.Book> collection;  //Collection of all the books
-        private ArrayList <LMS2.Book> checkedOut; //Collection of books checked out/borrowed
+        private ArrayList <LMS2.Book> collection;
+        private ArrayList <LMS2.Book> checkedOut;
 
         /*
-         * Creates a new Collection Arraylist for all the books
-         * and collection of books currently checked out
-         * */
+         * Constructs a new Library object.
+         *
+         * @param collection An ArrayList containing the collection of all the books.
+         *                   Pass an existing ArrayList or creat a new one to initialize
+         *                   the library's collection.
+         */
         public Library(ArrayList <LMS2.Book> collection) {
-            //collection = new ArrayList<LMS2.Book>();
             this.collection = collection;
-
             checkedOut = new ArrayList<LMS2.Book>();
         }
+
         /*
-         * Adds a new book to the collection*/
+         * Adds a new book to the collection.
+         *
+         * @param LMS2.Book book A book object containing the ID, Title, and Author
+         *                       of the book.
+         */
         public void addBook(LMS2.Book book) {
             collection.add(book);
         }
-
+        /*
+         * Adds a new book to the checkedOut ArrayList.
+         *
+         * @param LMS2.Book book A book object containing the ID, Title, and Author
+         *                       of the book.
+         */
         public void addBorrowed(LMS2.Book book) {
             checkedOut.add(book);
         }
         /*
-         * Removes a book from the collection
+         * Removes a book from the collection of available books.
+         *
+         * @param LMS2.Book book A book object containing the ID, Title, and Author
+         *                       of the book.
          */
         public void removeBook(LMS2.Book book){
             collection.remove(book);
         }
 
         /*
-         * Retrieves the collection of books
+         * Retrieves the collection of books in the library.
+         *
+         * @return An ArrayList containing all the books in the library.
          */
         public ArrayList <LMS2.Book> getBooks() {
             return collection;
         }
-
+        /*
+         * Retrieves the collection of books borrowed from the library.
+         *
+         * @return An ArrayList containing all books that have been checked out.
+         */
         public ArrayList <LMS2.Book> getBorrowed() {
             return checkedOut;
         }
     }
 
+    /*
+     * Kiara Howard, Software Dev I, 9/10/23
+     * Class Name Book
+     *
+     * This class gathers all the information needed to create a book
+     * object.
+     */
     public static class Book {
 
         private String title;           // Title of the book
@@ -62,35 +94,39 @@ public class LMS2 {
          * @param title The tile of the book.
          * @param author The author of the book.
          */
-        public Book(int isbn, String title, String author) {  //add this back in--, String title, String author
+        public Book(int isbn, String title, String author) {
             this.isbn = isbn;
             this.title = title;
             this.author = author;
         }
 
         /*
-         * Receives the ISBN of the book
+         * Receives the ISBN/ID of the book
+         * @return current isbn of the book
          */
         public int getISBN() {
             return isbn;
         }
 
         /*
-         * Sets the ISBN of the book
+         * Sets the ISBN of the book.
+         * @param isbn The new value to set for ISBN.
          */
         public void setISBN(int isbn) {
             this.isbn = isbn;
         }
 
         /*
-         * Receives the title of the book
+         * Receives the title of the book.
+         * @return current title of the book.
          */
         public String getTitle() {
             return title;
         }
 
         /*
-         * Sets the title of the book
+         *Sets the title of the book.
+         *@param title The new value to set for title.
          */
         public void setTitle(String title) {
             this.title = title;
@@ -98,19 +134,27 @@ public class LMS2 {
 
         /*
          * Receives the author of the book.
+         * @return current author of the book.
          */
         public String getAuthor() {
             return author;
         }
 
         /*
-         * Sets the author of the book.
+         *Sets the author of the book.
+         *@param author The new value to set for author
          */
         public void setAuthor(String author) {
             this.author = author;
         }
     }
 
+    /*
+     * Kiara Howard, Software Dev I, 9/10/23
+     * Class ISBN
+     *
+     * This class generates and checks an ID number for each book.
+     */
     public static class ISBN {
         private static int nextID = 0;
         private int currentISBN;
@@ -119,9 +163,17 @@ public class LMS2 {
         private int checkTaken;
         boolean found = true;
 
-
+        /*
+         * textInt(int isbn)
+         * checks if the given or current ID number is already in
+         * use or free to be selected. If it's already taken, the
+         * generator will continue onto the next and check each one.
+         * Once an available ID is found, then it's added to that ArrayList
+         * and returned as the ISBN for that book.
+         *
+         * @param isbn If an isbn or ID number is given
+         */
         public void textInt(int isbn) {
-            //idList.add(isbn);
             nextID = isbn;
             while(found) {
                 found = false;
@@ -136,18 +188,31 @@ public class LMS2 {
             }
 
             if(!found) {
-
                 idList.add(nextID);
                 currentISBN = nextID;
-
-                //nextID++;
             }
         }
+
+        /*
+         * Receives the current available ID number
+         * and assigns it to be returned
+         *
+         * @return currentISBN The current available ISBN for a book.
+         */
         public int getCurrentISBN() {
             currentISBN = nextID++;
             return currentISBN;
         }
     }
+
+    /*
+     * Kiara Howard, Software Dev I, 9/10/23
+     * Class fileReader
+     *
+     * This class creates an ID generator object while reading any
+     * text files. It separates each line for the text file to store,
+     *  create and pass along a new book object to the other classes.
+     */
 
     public static class fileReader {
         private final Library library;
@@ -158,18 +223,37 @@ public class LMS2 {
 
         private String filePath;
 
+        /*
+         * Constructs a new fileReader object.
+         *
+         * @param filePath                          The URL path of the text file.
+         * @param ArrayList<LMS2.Book> collection   A previously created ArrayList to add the
+         *                                          contents of the text file.
+         * @param LMS2.Library library              A previously created library object to add
+         *                                          newly created objects to.
+         */
+
         public fileReader(String filePath, ArrayList<LMS2.Book> collection, LMS2.Library library) {
           this.filePath = filePath;
           this.collection = collection;
           this.library = library;
         }
 
+        /*
+         * public void readPrintFile()
+         *
+         * scans, split and stores a text file.
+         * calls the getCurrentISBN() to verify or get a new
+         * ID.
+         *
+         * Creates a book object to add to the library collection.
+         */
         public void readPrintFile() {
+            /*
+             * Attempts to read data from a text file and catch
+             * any exceptions that might occur from that.
+             */
             try {
-                /*
-                 * Attempts to read data from a text file and catch
-                 * any exceptions that might occur from that.
-                 */
                 File fileBooks = new File("Books.txt");
                 Scanner myReader = new Scanner(fileBooks);
                 while (myReader.hasNextLine()) {
@@ -192,8 +276,8 @@ public class LMS2 {
                 }
                 myReader.close();
                 System.out.println("Updated library collection.");
-            }   catch (FileNotFoundException e) {
                 //Handles file not found error
+            }   catch (FileNotFoundException e) {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
             }
@@ -204,17 +288,44 @@ public class LMS2 {
         }
     }
 
+    /*
+     * Kiara Howard, Software Dev I, 9/10/23
+     * Class fileWriter
+     *
+     * This class writes the current library collection or checkedOUT
+     * collection to a text file. It has a try-catch block to handle
+     * any exceptions that might occur with text files.
+     */
+
     public static class fileWriter {
         private Library library;
         private ArrayList <LMS2.Book> collection;
         private String fileUpdate;
 
+        /*
+         * Constructs a new fileWriter object.
+         *
+         * @param fileUpdate                        The URL path of the text file.
+         * @param ArrayList<LMS2.Book> collection   A previously created ArrayList to add the
+         *                                          contents of the text file.
+         * @param LMS2.Library library              A previously created library object to add
+         *                                          newly created objects to.
+         */
 
         public fileWriter(String fileUpdate, ArrayList<LMS2.Book> collection, LMS2.Library library){
             this.fileUpdate = fileUpdate;
             this. collection = collection;
             this.library = library;
         }
+
+        /*
+         * public void writeToFile()
+         *
+         * try-catch block for handling exceptions
+         * loops through the current library collection and
+         * writes all the books in the collection to the text
+         * file.
+         */
 
         public void writeToFile() {
             try (FileWriter myWriter = new FileWriter(fileUpdate)) {
@@ -234,12 +345,13 @@ public class LMS2 {
 
         /*
         * Main Method for a Library Management System Consoled Based Application.
-        * This program will allow users to manage a collection of books in a Library.
+        * This program will allow users to add, remove via ID, and display lists
+        * of books owned by the library.
         *
         * Displays the front end menu for user interaction
         *
         * Creates instances for ISBN/ID # and the library.
-        * Creates a arraylist for the books.
+        * Creates an arraylist for the books.
         *
         * Path for reading and writing from a text file.
         * Calls the readPrintFile() method to read and display the books
@@ -320,9 +432,6 @@ public class LMS2 {
                             break;
                         }
                     }
-                    /*for (Book book: library.getBooks()) {
-                        System.out.println(book.getISBN() + " " + book.getTitle() + " by " + book.getAuthor());
-                    }*/
                     break;
 
                 case 3:
@@ -355,9 +464,7 @@ public class LMS2 {
                                 askRemoved = true;
                             } else {
                                 askRemoved = false;
-
                             }
-
                         }
                         break;
                     }
